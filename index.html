@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ХГФ | Наши Выпускники</title>
+
+    <!-- Подключаем библиотеку Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Шрифты -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --gold: #c5a059;
+            --dark: #1a1a1a;
+            --light: #fdfdfb;
+            --white: #ffffff;
+            --shadow: 0 10px 40px rgba(0,0,0,0.06);
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        /* Заголовок */
+        header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 6vw, 4rem);
+            margin: 0;
+            letter-spacing: -1px;
+        }
+
+        .divider {
+            width: 80px;
+            height: 2px;
+            background: var(--gold);
+            margin: 25px auto;
+        }
+
+        /* Формы и Панели */
+        .panel {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            max-width: 450px;
+            margin: 0 auto 60px;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 18px;
+            margin-bottom: 15px;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+            input:focus {
+                border-color: var(--gold);
+                box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.1);
+            }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 12px;
+        }
+
+        .btn-black {
+            background: var(--dark);
+            color: white;
+        }
+
+            .btn-black:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            }
+
+        .btn-gold {
+            background: transparent;
+            border: 2px solid var(--gold);
+            color: var(--gold);
+        }
+
+            .btn-gold:hover {
+                background: var(--gold);
+                color: white;
+            }
+
+        /* Карточки выпускников */
+        .section-title {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+        }
+
+        .alumni-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 40px;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 40px 30px;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+            .card:hover {
+                transform: translateY(-12px);
+                box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            }
+
+        .photo-wrap {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            margin: 0 auto 25px;
+            border: 3px solid var(--gold);
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+            .photo-wrap img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+
+        .card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            margin: 10px 0 5px;
+        }
+
+        .year {
+            color: var(--gold);
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .experience-box {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #f0f0f0;
+            text-align: left;
+        }
+
+            .experience-box strong {
+                font-size: 0.8rem;
+                color: #aaa;
+                text-transform: uppercase;
+            }
+
+        .job-list {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0;
+        }
+
+        .job-item {
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            color: #555;
+            position: relative;
+            padding-left: 20px;
+        }
+
+            .job-item::before {
+                content: "✦";
+                position: absolute;
+                left: 0;
+                color: var(--gold);
+                font-size: 0.8rem;
+            }
+
+        /* Админка */
+        .admin-tag {
+            background: #fff3cd;
+            color: #856404;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Художественно-графический факультет</h1>
+            <div class="divider"></div>
+        </header>
+
+        <!-- Секция логина -->
+        <div id="login-ui" class="panel">
+            <h2 style="font-family: 'Playfair Display';">Вход для выпускников</h2>
+            <input type="email" id="email" placeholder="Электронная почта">
+            <input type="password" id="password" placeholder="Пароль">
+            <button class="btn-black" onclick="signIn()">Войти</button>
+            <button class="btn-gold" onclick="signUp()">Регистрация</button>
+            <p id="auth-error" style="color: #e74c3c; font-size: 0.85rem; margin-top: 10px;"></p>
+        </div>
+
+        <!-- Личный кабинет -->
+        <div id="cabinet-ui" class="panel hidden" style="max-width: 600px;">
+            <div id="admin-badge" class="hidden"><span class="admin-tag">РЕЖИМ АДМИНИСТРАТОРА</span></div>
+            <h2 style="font-family: 'Playfair Display';">Здравствуйте, <span id="user-display-name"></span>!</h2>
+
+            <!-- Поиск для админа -->
+            <div id="admin-search" class="hidden" style="margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px;">
+                <p><strong>Поиск по базе выпускников:</strong></p>
+                <input type="text" id="search-input" placeholder="Введите фамилию..." oninput="fetchAlumni(this.value)">
+            </div>
+
+            <!-- Добавление работы для выпускника -->
+            <div id="work-form">
+                <p><strong>Добавить новое место работы:</strong></p>
+                <input type="text" id="work-company" placeholder="Название компании / Студии">
+                <input type="text" id="work-title" placeholder="Ваша должность">
+                <button class="btn-black" onclick="addExperience()">Опубликовать</button>
+            </div>
+
+            <button class="btn-gold" onclick="signOut()" style="margin-top: 20px; border-color: #ddd; color: #999;">Выйти из аккаунта</button>
+        </div>
+
+        <h2 class="section-title">Наши выпускники</h2>
+        <div id="alumni-list" class="alumni-grid">
+            <!-- Сюда JS вставит карточки -->
+        </div>
+    </div>
+
+    <script>
+        // --- 1. НАСТРОЙКИ (Вставь свои данные) ---
+        const SB_URL = 'https://cnmlgxgjsxugzmtrccse.supabase.co';
+        const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNubWxneGdqc3h1Z3ptdHJjY3NlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxODg1MTgsImV4cCI6MjA4ODc2NDUxOH0.agh-yIprg_XSphZPXLWT10a2UWqkPV98Qq-EiA3FO10';
+
+        // Создаем клиент с уникальным именем, чтобы не было ошибок
+        const client = supabase.createClient(SB_URL, SB_KEY);
+
+        let activeProfile = null;
+
+        // --- 2. АВТОРИЗАЦИЯ ---
+        async function signUp() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const name = prompt("Введите ваше полное имя (ФИО):");
+            const year = prompt("Год выпуска:");
+
+            if (!name || !year || !email || !password) return;
+
+            // Регистрируем через Auth и передаем данные в метаданные (для SQL триггера)
+            const { data, error } = await client.auth.signUp({
+                email,
+                password,
+                options: { data: { full_name: name, grad_year: year } }
+            });
+
+            if (error) alert("Ошибка: " + error.message);
+            else alert("Регистрация прошла! Проверьте почту или попробуйте войти.");
+        }
+
+        async function signIn() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const { error } = await client.auth.signInWithPassword({ email, password });
+
+            if (error) document.getElementById('auth-error').innerText = "Ошибка: неверный логин или пароль";
+            else checkSession();
+        }
+
+        async function signOut() {
+            await client.auth.signOut();
+            location.reload();
+        }
+
+        // --- 3. ЛОГИКА КАБИНЕТА ---
+        async function checkSession() {
+            const { data: { user } } = await client.auth.getUser();
+
+            if (user) {
+                // Загружаем профиль из таблицы profiles
+                const { data: profile, error } = await client.from('profiles').select('*').eq('id', user.id).maybeSingle();
+
+                activeProfile = profile || { id: user.id, full_name: "Выпускник" };
+
+                document.getElementById('login-ui').classList.add('hidden');
+                document.getElementById('cabinet-ui').classList.remove('hidden');
+                document.getElementById('user-display-name').innerText = activeProfile.full_name;
+
+                if (activeProfile.role === 'admin') {
+                    document.getElementById('admin-search').classList.remove('hidden');
+                    document.getElementById('admin-badge').classList.remove('hidden');
+                }
+            }
+            fetchAlumni();
+        }
+
+        async function addExperience() {
+            if (!activeProfile || !activeProfile.id) return;
+
+            const comp = document.getElementById('work-company').value;
+            const titl = document.getElementById('work-title').value;
+
+            if (!comp || !titl) return;
+
+            const { error } = await client.from('experience').insert([
+                { user_id: activeProfile.id, company_name: comp, job_position: titl }
+            ]);
+
+            if (error) alert("Ошибка БД: " + error.message);
+            else {
+                document.getElementById('work-company').value = '';
+                document.getElementById('work-title').value = '';
+                fetchAlumni();
+            }
+        }
+
+        // --- 4. ОТОБРАЖЕНИЕ СПИСКА ---
+        async function fetchAlumni(search = '') {
+            let query = client.from('profiles').select('*, experience(*)').eq('role', 'user');
+
+            if (search) query = query.ilike('full_name', `%${search}%`);
+
+            const { data: alumni, error } = await query;
+            if (error) return;
+
+            const grid = document.getElementById('alumni-list');
+            grid.innerHTML = '';
+
+            alumni.forEach(person => {
+                const card = document.createElement('div');
+                card.className = 'card';
+
+                const jobsHtml = person.experience && person.experience.length > 0
+                    ? person.experience.map(j => `<li class="job-item">${j.company_name} — <i>${j.job_position}</i></li>`).join('')
+                    : '<li class="job-item" style="color:#bbb">Место работы не указано</li>';
+
+                card.innerHTML = `
+                    <div class="photo-wrap">
+                        <img src="${person.avatar_url || 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + encodeURIComponent(person.full_name)}" alt="Avatar">
+                    </div>
+                    <div class="year">Выпуск ${person.graduation_year || '—'}</div>
+                    <h3>${person.full_name}</h3>
+                    <div class="experience-box">
+                        <strong>Карьерный путь:</strong>
+                        <ul class="job-list">${jobsHtml}</ul>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Инициализация при загрузке страницы
+        checkSession();
+    </script>
+
+</body>
+</html>
