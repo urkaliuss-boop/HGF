@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /cabinet
+Disallow: /business-cabinet
+Disallow: /admin/
+Disallow: /widget-content
+
+Sitemap: https://noxiss-work.ru/sitemap.xml
+
+# NOXISS.WORK — Сервис управления репутацией
+# Все публичные страницы доступны для индексации

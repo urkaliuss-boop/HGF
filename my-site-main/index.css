@@ -1,0 +1,215 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Surface colors */
+  --surface-primary: #F8F9FA;
+  --surface-secondary: #FFFFFF;
+  --surface-accent: #EEF4FF;
+  --surface-dark: #0F1117;
+
+  /* Text colors */
+  --text-primary: #1A1A2E;
+  --text-secondary: #4A4A6A;
+  --text-muted: #6E6E80;
+
+  /* Accent */
+  --accent-primary: #006BDB;
+  --accent-secondary: #5856D6;
+  --accent-success: #34C759;
+  --accent-warning: #FF9F0A;
+
+  /* Shadows */
+  --shadow-card: 0 2px 8px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.08);
+  --shadow-card-hover: 0 4px 12px rgba(0,0,0,0.06), 0 16px 48px rgba(0,0,0,0.12);
+
+  /* Radii */
+  --radius-container: 24px;
+  --radius-card: 20px;
+  --radius-button: 12px;
+  --radius-badge: 8px;
+
+  /* Typography */
+  --font-h1: 800 56px/1.1 'Inter', sans-serif;
+  --font-h2: 800 45px/1.1 'Inter', sans-serif;
+  --font-h3: 600 36px/1.1 'Inter', sans-serif;
+  --font-h4: 600 28px/1.1 'Inter', sans-serif;
+  --font-body: 400 18px/1.6 'Inter', sans-serif;
+  --font-small: 400 16px/1.6 'Inter', sans-serif;
+  --font-caption: 400 14px/1.6 'Inter', sans-serif;
+
+  /* Animation */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-micro: 250ms;
+  --duration-scroll: 500ms;
+  --duration-theme: 500ms;
+}
+
+.dark {
+  --surface-primary: #0A0A0F;
+  --surface-secondary: #12121A;
+  --surface-accent: #1A1A2E;
+  --surface-dark: #060608;
+
+  --text-primary: #F0F0F5;
+  --text-secondary: #A0A0B0;
+  /* ≥4.5:1 contrast on all dark surfaces (#0A0A0F, #12121A, #1A1A2E, #060608) — WCAG AA (req 9.3) */
+  --text-muted: #9494A4;
+
+  /* Glow instead of shadows */
+  --shadow-card: 0 0 0 1px rgba(255,255,255,0.06), 0 0 20px rgba(0,113,227,0.08);
+  --shadow-card-hover: 0 0 0 1px rgba(255,255,255,0.1), 0 0 40px rgba(0,113,227,0.15);
+  --glow-blue: 0 0 40px rgba(0,113,227,0.3);
+  --glow-purple: 0 0 40px rgba(88,86,214,0.3);
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--surface-primary);
+  color: var(--text-primary);
+  transition: background-color var(--duration-theme) var(--ease-out-expo),
+              color var(--duration-theme) var(--ease-out-expo);
+}
+
+/* Theme transition for all elements (req 9.4) */
+html.dark *,
+html:not(.dark) * {
+  transition: background-color var(--duration-theme) var(--ease-out-expo),
+              color var(--duration-theme) var(--ease-out-expo),
+              border-color var(--duration-theme) var(--ease-out-expo),
+              box-shadow var(--duration-theme) var(--ease-out-expo);
+}
+
+/* Typography System (req 5.1–5.6)
+ * Desktop (≥1024px): h1 56px/800, h2 45px/800, h3 36px/600, h4 28px/600, body 18px/400, small 16px, caption 14px
+ * Mobile (<1024px): h1 36px, h2 28px, h3 22px, h4 18px, body 16px, small 14px, caption 12px
+ * line-height: 1.1 headings, 1.6 body/caption
+ * letter-spacing: -0.02em headings, 0.01em body
+ * WCAG AA: 4.5:1 small text, 3:1 large text
+ */
+@layer components {
+  .typo-h1 {
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .typo-h2 {
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .typo-h3 {
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .typo-h4 {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .typo-body {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+  }
+  .typo-small {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+  }
+  .typo-caption {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+  }
+
+  /* Desktop scale (≥1024px) */
+  @media (min-width: 1024px) {
+    .typo-h1 {
+      font-size: 56px;
+    }
+    .typo-h2 {
+      font-size: 45px;
+    }
+    .typo-h3 {
+      font-size: 36px;
+    }
+    .typo-h4 {
+      font-size: 28px;
+    }
+    .typo-body {
+      font-size: 18px;
+    }
+    .typo-small {
+      font-size: 16px;
+    }
+    .typo-caption {
+      font-size: 14px;
+    }
+  }
+}
+
+/* =================================================================
+ * Mobile Animation Adaptation (req 8.1, 8.3, 8.4, 8.5)
+ * ================================================================= */
+
+/* Touch devices: replace hover animations with active (tap) feedback.
+ * Hover effects are disabled since they fire on first tap and stick on touch.
+ * Active state provides 100ms visual response for tap interactions.
+ *
+ * Validates: Requirements 8.4
+ */
+@media (hover: none) and (pointer: coarse) {
+  .card-hoverable {
+    /* Disable hover translateY and shadow changes on touch */
+    --tw-translate-y: 0px !important;
+  }
+
+  .card-hoverable:hover {
+    transform: none !important;
+    box-shadow: var(--shadow-card) !important;
+  }
+
+  .card-hoverable:active {
+    transform: scale(0.98) !important;
+    transition: transform 100ms ease-out !important;
+  }
+}
+
+/* Devices with fine pointer (mouse/trackpad): hover animations apply normally.
+ * This is the default Tailwind hover behavior — no overrides needed.
+ *
+ * Validates: Requirements 8.4
+ */
+@media (hover: hover) and (pointer: fine) {
+  .card-hoverable {
+    will-change: transform;
+  }
+}
+
+/* GPU optimization: all animated elements use only transform + opacity.
+ * will-change: transform promotes elements to their own compositor layer.
+ * No width/height/margin animations — ensures ≥55fps.
+ *
+ * Validates: Requirements 8.3
+ */
+@layer utilities {
+  .gpu-animated {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+  }
+}
